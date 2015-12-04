@@ -1,0 +1,14 @@
+{
+  "name": "currency-convert",
+  "version": "1.0.0",
+  "description": "A npm module that looks at mutliple exchanges when determining the fx rate",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "money": "^0.2.0"
+  }
+}
