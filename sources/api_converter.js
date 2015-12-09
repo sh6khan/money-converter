@@ -1,20 +1,20 @@
 var async = require('async');
-var YahooTable = require('./yahoo_table');
+var YahooTable = require('./yahoo_tables');
 
 var ApiConverter = function() {
   this.deviationTolerace = 0.1;
-  this.yahooTable = new YahooTable();
 };
 
-ApiConverter.convert = function(to, from, callback) {
+ApiConverter.prototype.convert = function(to, from, callback) {
+  var self = this;
   var errCount = 0;
 
-  async.parallel({
+  async.parallel([
     yahooTable
-  }, returnRate );
+  ], returnRate );
 
   function yahooTable(done) {
-    yahooTable.convert(to, from, function(err, rate) {
+    YahooTable(to, from, function(err, resp, rate) {
       if (err) {
         console.log(err);
         errCount++;
@@ -29,7 +29,7 @@ ApiConverter.convert = function(to, from, callback) {
       callback(err);
       return;
     }
-
+    
     verifiedRate = self.verifyRates(result);
 
     callback(null, verifiedRate);
@@ -38,17 +38,17 @@ ApiConverter.convert = function(to, from, callback) {
 
 
 // check through the results to see if they are very different
-ApiConverter.prototype.verifyRates = function(resutls) {
+ApiConverter.prototype.verifyRates = function(results) {
   var verifiedRate = {};
 
   // finding the min and max
-  var min = resutls[0];
-  var max = resutls[0];
+  var min = results[0];
+  var max = results[0];
 
   var minIndex = 0;
   var maxIndex = 0;
 
-  resutls.forEach(function(rate) {
+  results.forEach(function(rate) {
     if (min < rate) {
       min = rate;
     }
@@ -62,14 +62,14 @@ ApiConverter.prototype.verifyRates = function(resutls) {
   var diff = Math.abs(max - min)
   var relativeDeviation = (diff / min) * 100
 
-  if (deviation > this.deviationTolerace) {
+  if (relativeDeviation > this.deviationTolerace) {
     verifiedRate.message = 'there was deviations in the rates returned was larger than' + this.deviationTolerace;
   }
 
   // return a rate object with yahoo
-  verifiedRate.rate = resutls[0];
+  verifiedRate.rate = results[0];
 
-  return returnRate;
+  return verifiedRate;
 };
 
 module.exports = ApiConverter;
