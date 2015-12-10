@@ -3,8 +3,7 @@
 
 var async = require('async');
 var ApiConverter = require('./lib/api_converter');
-
-
+var CronJob = require('cron').CronJob;
 
 // a list of some very popular currencies
 var SUPPORTED_CURRENCIES = ['USD','EUR','JPY','AUD','GBP','NZD','CHF','ZAR','CNY','BTC', 'CAD'];
@@ -14,12 +13,30 @@ var Fx = function(base, currencies, callback) {
   var self = this;
 
   this.currencies = currencies || SUPPORTED_CURRENCIES;
-  this.rates = {}
+  this.rates = {};
   this.base = base;
 
   this.apiConverter = new ApiConverter();
 
-  async.each(this.currencies, this.buildRateMap.bind(self), callback);
+  async.each(this.currencies, this.buildRateMap.bind(self), function(err) {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+
+    callback();
+  });
+
+
+  var updateRateJob = new CronJob({
+    cronTime: '00 * * * * *',
+    onTick: updateRate,
+    start: true
+  });
+
+  function updateRate() {
+    self.updateRates();
+  };
 };
 
 Fx.prototype.buildRateMap = function(currency, callback) {
@@ -78,8 +95,18 @@ Fx.prototype.convert = function(amount, opts) {
   return baseEquiv * this.rates[to];
 };
 
-Fx.prototype.updateRates = function() {
 
+// keep all the rate values in memory properlly up to date
+Fx.prototype.updateRates = function(callback) {
+  var self = this;
+
+  async.each(this.currencies, this.buildRateMap.bind(self), function(err) {
+    if (err) {
+      console.log(err);  
+    }
+
+    typeof callback === 'function' && callback();
+  });
 };
 
 module.exports = Fx;

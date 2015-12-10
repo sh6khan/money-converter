@@ -34,6 +34,9 @@ test('non base conversion', function() {
 
 test('reverse base conversion', function() {
   var result = convert.convert(1, {from: 'CAD', to: 'USD'});
-  console.log(result);
   assert(result);
+});
+
+test('testing rate update', function(done) {
+  convert.updateRates(done)
 });
