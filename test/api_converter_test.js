@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ApiConverter = require('../sources/api_converter');
+var ApiConverter = require('../lib/api_converter');
 
 suite('api-converter');
 

@@ -3,7 +3,7 @@
 
 var currencies = require('./currencies');
 var async = require('async');
-var ApiConverter = require('./sources/api_converter');
+var ApiConverter = require('./lib/api_converter');
 
 var Fx = function(base, currencies, callback) {
   this.currencies = currencies || currencies.SUPPORTED_CURRENCIES;
