@@ -1,12 +1,16 @@
 {
   "name": "money-converter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A npm module that looks at mutliple exchanges when determining the fx rate",
-  "main": "index.js",
+  "main": "convert.js",
   "scripts": {
     "test": "mocha --ui qunit --bail --reporter spec test/index.js"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/sh6khan/money-converter.git"
+  },
+  "author": "Sadman",
   "license": "ISC",
   "dependencies": {
     "assert": "^1.3.0",
