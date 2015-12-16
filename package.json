@@ -1,6 +1,6 @@
 {
   "name": "money-converter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A npm module that looks at mutliple exchanges when determining the fx rate",
   "main": "convert.js",
   "scripts": {
